@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ghcr.io/arrhes/application
+  IMAGE_PREFIX: ghcr.io/arrhes/fec
 
 jobs:
   build-and-push:
@@ -45,23 +45,17 @@ jobs:
 
       - name: Build images with docker compose
         env:
-          ARRHES_VERSION: ${{ steps.version.outputs.version }}
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VERSION: ${{ steps.version.outputs.version }}
           VITE_WEBSITE_BASE_URL: ${{ vars.VITE_WEBSITE_BASE_URL }}
         run: |
-          docker compose -f .workflows/.build/compose.yml build ci
-          docker compose -f .workflows/.build/compose.yml build api website
+          docker compose -f workflows/build/compose.yml build
 
       - name: Tag and push images
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          IMAGES=("api" "website")
+          SRC="fec:${VERSION}"
+          DEST="${IMAGE_PREFIX}/website"
 
-          for img in "${IMAGES[@]}"; do
-            SRC="arrhes-${img}:${VERSION}"
-            DEST="${IMAGE_PREFIX}/${img}"
-
-            docker tag "${SRC}" "${DEST}:${VERSION}"
-            docker push "${DEST}:${VERSION}"
-          done
+          docker tag "${SRC}" "${DEST}:${VERSION}"
+          docker push "${DEST}:${VERSION}"
