@@ -1,0 +1,51 @@
+{
+    "name": "@arrhes/fec-website",
+    "type": "module",
+    "private": false,
+    "scripts": {
+        "prepare": "panda codegen",
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:unit": "vitest run ../../tests/website/unit"
+    },
+    "devDependencies": {
+        "@pandacss/dev": "1.8.1",
+        "@types/node": "24.10.1",
+        "@types/react": "19.2.7",
+        "@types/react-dom": "19.2.3",
+        "@vitejs/plugin-react": "5.1.1",
+        "@vitest/browser": "4.0.18",
+        "playwright": "1.58.2",
+        "typescript": "5.9.3",
+        "vite": "7.2.4",
+        "vitest": "4.0.18"
+    },
+    "dependencies": {
+        "@arrhes/fec-engine": "workspace:*",
+        "@hookform/resolvers": "5.2.2",
+        "@tabler/icons-react": "3.35.0",
+        "@tanstack/react-router": "1.139.10",
+        "@tanstack/react-table": "8.21.3",
+        "@tanstack/react-virtual": "3.13.12",
+        "react": "19.2.0",
+        "react-dom": "19.2.0",
+        "react-hook-form": "7.66.1",
+        "react-imask": "7.6.1",
+        "valibot": "1.2.0"
+    },
+    "browserslist": {
+        "production": [
+            "cover 99.99%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "cover 99.99%",
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}

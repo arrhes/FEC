@@ -1,0 +1,67 @@
+name: Publish Docker images
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/arrhes/application
+
+jobs:
+  build-and-push:
+    name: Build & push images
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "version=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(cat VERSION)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build images with docker compose
+        env:
+          ARRHES_VERSION: ${{ steps.version.outputs.version }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_WEBSITE_BASE_URL: ${{ vars.VITE_WEBSITE_BASE_URL }}
+        run: |
+          docker compose -f .workflows/.build/compose.yml build ci
+          docker compose -f .workflows/.build/compose.yml build api website
+
+      - name: Tag and push images
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          IMAGES=("api" "website")
+
+          for img in "${IMAGES[@]}"; do
+            SRC="arrhes-${img}:${VERSION}"
+            DEST="${IMAGE_PREFIX}/${img}"
+
+            docker tag "${SRC}" "${DEST}:${VERSION}"
+            docker push "${DEST}:${VERSION}"
+          done

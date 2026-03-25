@@ -1,0 +1,19 @@
+
+services:
+  # Website - Frontend interface (React + Vite)
+  fec-website:
+    container_name: fec-website
+    image: fec-website
+    build:
+      context: ../..
+      dockerfile: ./workflows/dev/website/Dockerfile
+      args:
+        NODE_VERSION: "22.16.0"
+        PNPM_VERSION: "10.12.1"
+    environment:
+      VITE_WEBSITE_BASE_URL: http://localhost:19004
+    ports:
+      - "19004:5173"
+    volumes:
+      # Full application package - bind-mounted from host (including node_modules)
+      - ../..:/workspace:cached

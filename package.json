@@ -1,0 +1,25 @@
+{
+    "name": "@arrhes/fec",
+    "private": true,
+    "license": "AGPL-3.0-only",
+    "scripts": {
+        "dev": "pnpm --recursive --if-present --parallel --filter='./packages/**' run dev",
+        "build": "pnpm --recursive --if-present --filter='./packages/**' run build",
+        "check": "biome check .",
+        "check:fix": "biome check --fix .",
+        "format": "biome format .",
+        "format:fix": "biome format --fix .",
+        "lint": "biome lint .",
+        "lint:fix": "biome lint --fix .",
+        "test": "pnpm --recursive --if-present --filter='./packages/**' run test",
+        "test:e2e": "playwright test --config=tests/playwright.config.ts"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.3.15",
+        "@playwright/test": "1.58.2",
+        "playwright": "1.58.2"
+    },
+    "workspaces": [
+        "./packages/*"
+    ]
+}

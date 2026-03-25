@@ -1,0 +1,15 @@
+# Include any files or directories that you don't want to be copied to your
+# container here (e.g., local build artifacts, temporary files, etc.).
+
+**/.dockerignore
+**/.env
+**/.vscode
+**/.git
+**/.gitignore
+**/docker-compose*
+**/compose*
+**/Dockerfile*
+**/node_modules
+packages/*/build
+**/*.tsbuildinfo
+README.md

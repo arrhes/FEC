@@ -1,0 +1,34 @@
+# ==============================================================================
+# .dockerignore - Excludes files from Docker build context
+# ==============================================================================
+# The full application package (including node_modules) is bind-mounted
+# at runtime, so the build context only needs to be minimal.
+# This primarily reduces the size of what's sent to the Docker daemon.
+# ==============================================================================
+
+# Version control
+.git
+.gitignore
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.cache
+*.tgz

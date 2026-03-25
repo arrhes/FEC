@@ -1,0 +1,44 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "target": "ES2022",
+        "useDefineForClassFields": true,
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "types": ["vite/client", "node"],
+        "skipLibCheck": true,
+        /* Bundler mode */
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "moduleDetection": "force",
+        "noEmit": true,
+        "jsx": "react-jsx",
+        /* Linting */
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        /* Path aliases */
+        "baseUrl": "."
+    },
+    "include": ["src"],
+    "exclude": [
+        "src/components/buttons/linkButton.tsx",
+        "src/features/home/documentationBanner.tsx",
+        "src/features/home/featureItem.tsx",
+        "src/features/home/heroIllustration.tsx",
+        "src/features/home/organizationsBanner.tsx",
+        "src/features/home/pricing.tsx",
+        "src/utilities/cookies",
+        "src/utilities/getResponseBodyFromAPI.ts",
+        "src/utilities/invalidateData.ts",
+        "src/utilities/prefetchYearData.ts",
+        "src/utilities/useHTTPData.ts"
+    ]
+}

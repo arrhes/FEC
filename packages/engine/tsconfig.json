@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "target": "ESNext",
+        "noImplicitAny": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "rootDir": "./src",
+        "outDir": "./build",
+        "paths": {
+            "#/*": ["./src/*"]
+        }
+    },
+    "exclude": ["./node_modules", "./build"],
+    "include": ["./src"]
+}

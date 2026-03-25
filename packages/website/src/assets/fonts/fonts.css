@@ -1,0 +1,32 @@
+@font-face {
+    font-family: "Monaspace";
+    src: url("./MonaspaceNeonVar.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+    font-feature-settings: "calt";
+}
+
+@font-face {
+    font-family: 'Mona Sans VF';
+    src:
+        url('./MonaSansVF[wdth,wght,opsz,ital].woff2') format('woff2 supports variations'),
+        url('./MonaSansVF[wdth,wght,opsz,ital].woff2') format('woff2-variations');
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+    font-style: normal;
+    font-optical-sizing: auto;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Mona Sans VF';
+    src:
+        url('./MonaSansVF[wdth,wght,opsz,ital].woff2') format('woff2 supports variations'),
+        url('./MonaSansVF[wdth,wght,opsz,ital].woff2') format('woff2-variations');
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+    font-style: italic;
+    font-optical-sizing: auto;
+    font-display: swap;
+}

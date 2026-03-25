@@ -1,0 +1,34 @@
+{
+    "name": "@arrhes/fec-engine",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build": "tsc --build",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "24.10.1",
+        "typescript": "5.9.3"
+    },
+    "dependencies": {
+        "nanoid": "5.1.6",
+        "valibot": "1.2.0"
+    },
+    "exports": {
+        ".": {
+            "source": "./src/index.ts",
+            "types": "./build/index.d.ts",
+            "default": "./build/index.js"
+        },
+        "./utilities": {
+            "source": "./src/utilities/index.ts",
+            "types": "./build/utilities/index.d.ts",
+            "default": "./build/utilities/index.js"
+        },
+        "./fec": {
+            "source": "./src/fec/index.ts",
+            "types": "./build/fec/index.d.ts",
+            "default": "./build/fec/index.js"
+        }
+    }
+}

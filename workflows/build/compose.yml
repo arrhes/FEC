@@ -1,0 +1,38 @@
+# ==============================================================================
+# fec Platform - Production Environment
+# ==============================================================================
+# Docker Compose configuration for production deployment
+#
+# Architecture:
+# - API: Node.js with compiled TypeScript
+# - Dashboard: Static build served by Nginx
+# - Worker: Python audio processing service
+# - Infrastructure: External (managed PostgreSQL, S3)
+#
+# Usage:
+#   docker compose -f workflows/build/compose.yml up -d
+#   docker compose -f workflows/build/compose.yml down
+#
+# The VERSION is read from the root VERSION file. Override with:
+#   VERSION=1.2.3 docker compose -f workflows/build/compose.yml build
+#
+# Required environment variables:
+#   VERSION             - Semver tag for all images (default: latest)
+#   VITE_API_BASE_URL   - Public URL of the API (baked into dashboard JS bundle)
+#
+# Before starting, copy and configure the API environment file:
+#   cp workflows/build/api/.env.example workflows/build/api/.env
+# ==============================================================================
+
+services:
+  fec-website:
+    image: fec:${VERSION:-latest}
+    build:
+      context: ../..
+      dockerfile: ./workflows/build/website/Dockerfile
+      args:
+        VERSION: ${VERSION:-latest}
+        VITE_WEBSITE_BASE_URL: ${VITE_WEBSITE_BASE_URL:?VITE_WEBSITE_BASE_URL must be set}
+    ports:
+      - "3001:80"
+    restart: unless-stopped
