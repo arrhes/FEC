@@ -10,4 +10,4 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-docker compose --file="$COMPOSE_FILE" --env-file="$ENV_FILE" build "$@"
+docker compose --file="$COMPOSE_FILE" --env-file="$ENV_FILE" --progress=plain build --build-arg CACHEBUST="$(date +%s)" "$@"

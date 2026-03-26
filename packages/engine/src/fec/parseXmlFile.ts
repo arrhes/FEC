@@ -43,6 +43,9 @@ export function parseXmlFile(content: string, fileName: string): FecParsedFile {
         for (const ecriture of ecritures) {
             const ecritureNum = getChildText(ecriture, "EcritureNum")
             const ecritureDate = getChildText(ecriture, "EcritureDate")
+            const ecritureLib = getChildText(ecriture, "EcritureLib")
+            const pieceRef = getChildText(ecriture, "PieceRef")
+            const pieceDate = getChildText(ecriture, "PieceDate")
             const ecritureLet = getChildText(ecriture, "EcritureLet")
             const dateLet = getChildText(ecriture, "DateLet")
             const validDate = getChildText(ecriture, "ValidDate")
@@ -50,12 +53,8 @@ export function parseXmlFile(content: string, fileName: string): FecParsedFile {
             const lignes = ecriture.querySelectorAll("ligne")
 
             for (const ligne of lignes) {
-                const compAuxNum =
-                    getChildText(ligne, "CompAuxNum") ||
-                    getChildText(ligne, "CompteAuxNum")
-                const compAuxLib =
-                    getChildText(ligne, "CompAuxLib") ||
-                    getChildText(ligne, "CompteAuxLib")
+                const compAuxNum = getChildText(ligne, "CompAuxNum") || getChildText(ligne, "CompteAuxNum")
+                const compAuxLib = getChildText(ligne, "CompAuxLib") || getChildText(ligne, "CompteAuxLib")
 
                 const entry: FecEntry = {
                     JournalCode: journalCode,
@@ -66,9 +65,9 @@ export function parseXmlFile(content: string, fileName: string): FecParsedFile {
                     CompteLib: getChildText(ligne, "CompteLib"),
                     CompAuxNum: compAuxNum,
                     CompAuxLib: compAuxLib,
-                    PieceRef: getChildText(ligne, "PieceRef"),
-                    PieceDate: getChildText(ligne, "PieceDate"),
-                    EcritureLib: getChildText(ligne, "EcritureLib"),
+                    PieceRef: pieceRef,
+                    PieceDate: pieceDate,
+                    EcritureLib: ecritureLib,
                     Debit: getChildText(ligne, "Debit"),
                     Credit: getChildText(ligne, "Credit"),
                     EcritureLet: ecritureLet,

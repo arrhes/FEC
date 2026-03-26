@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "typeRoots": ["../../packages/engine/node_modules/@types", "../../packages/engine/node_modules"],
+        "types": ["node", "vitest/globals"]
+    },
+    "include": ["./**/*.test.ts"]
+}
