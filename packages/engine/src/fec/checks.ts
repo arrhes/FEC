@@ -576,6 +576,177 @@ export function checkPieceDateCoherence(parsed: FecParsedFile): FecCheckResult[]
 }
 
 // ---------------------------------------------------------------------------
+// 20. checkFieldCountMismatch - Chaque ligne doit avoir le même nombre de champs que l'en-tête
+// ---------------------------------------------------------------------------
+
+export function checkFieldCountMismatch(parsed: FecParsedFile): FecCheckResult[] {
+    const results: FecCheckResult[] = []
+    if (!parsed.lineIssues) return results
+
+    for (const issue of parsed.lineIssues) {
+        if (issue.kind === "field_count_mismatch") {
+            results.push({
+                id: "FIELD_COUNT_MISMATCH",
+                severity: "error",
+                message: `La structure du fichier est incorrecte : en ligne ${issue.line} : il y a ${issue.actualFields} champs au lieu des ${issue.expectedFields} champs attendus.`,
+                line: issue.line,
+            })
+        }
+    }
+    return results
+}
+
+// ---------------------------------------------------------------------------
+// 21. checkEmptyLines - Détection des lignes vides dans le fichier (hors fin de fichier)
+// ---------------------------------------------------------------------------
+
+export function checkEmptyLines(parsed: FecParsedFile): FecCheckResult[] {
+    const results: FecCheckResult[] = []
+    if (!parsed.lineIssues) return results
+
+    for (const issue of parsed.lineIssues) {
+        if (issue.kind === "empty") {
+            results.push({
+                id: "EMPTY_LINE",
+                severity: "error",
+                message: `La structure du fichier est incorrecte, la ligne ${issue.line} est vide.`,
+                line: issue.line,
+            })
+        }
+    }
+    return results
+}
+
+// ---------------------------------------------------------------------------
+// 22. checkDebitCreditExclusive - Débit et Crédit ne doivent pas être tous deux renseignés ou tous deux nuls
+// ---------------------------------------------------------------------------
+
+export function checkDebitCreditExclusive(parsed: FecParsedFile): FecCheckResult[] {
+    const results: FecCheckResult[] = []
+    if (!parsed.headers.includes("Debit") || !parsed.headers.includes("Credit")) {
+        return results
+    }
+
+    for (let i = 0; i < parsed.entries.length; i++) {
+        const entry = parsed.entries[i]!
+        const debitStr = entry["Debit"]?.trim() ?? ""
+        const creditStr = entry["Credit"]?.trim() ?? ""
+
+        // Only check lines where both fields have valid numeric values
+        if (debitStr === "" || creditStr === "") continue
+
+        const debit = parseDecimal(debitStr)
+        const credit = parseDecimal(creditStr)
+
+        // Both non-zero on the same line
+        if (Math.abs(debit) > 0.005 && Math.abs(credit) > 0.005) {
+            results.push({
+                id: "DEBIT_CREDIT_EXCLUSIVE",
+                severity: "warning",
+                message: `Ligne ${i + 2} : débit (${debitStr}) et crédit (${creditStr}) sont tous les deux renseignés sur une même ligne.`,
+                line: i + 2,
+            })
+        }
+        // Both zero (debit = credit = 0)
+        if (Math.abs(debit) <= 0.005 && Math.abs(credit) <= 0.005) {
+            results.push({
+                id: "DEBIT_CREDIT_EXCLUSIVE",
+                severity: "warning",
+                message: `Ligne ${i + 2} : débit et crédit sont tous les deux à zéro.`,
+                line: i + 2,
+            })
+        }
+    }
+    return results
+}
+
+// ---------------------------------------------------------------------------
+// 23. checkNumericDotSeparator - Le point est interdit comme séparateur décimal
+// ---------------------------------------------------------------------------
+
+export function checkNumericDotSeparator(parsed: FecParsedFile): FecCheckResult[] {
+    const results: FecCheckResult[] = []
+    const numericFields = ["Debit", "Credit", "Montantdevise"]
+
+    for (let i = 0; i < parsed.entries.length; i++) {
+        const entry = parsed.entries[i]!
+        for (const field of numericFields) {
+            const value = entry[field]
+            if (value && value.trim() !== "" && value.includes(".")) {
+                results.push({
+                    id: "NUMERIC_DOT_SEPARATOR",
+                    severity: "error",
+                    message: `Ligne ${i + 2} : le champ "${field}" contient "${value}" — un format numérique avec une virgule au lieu d'un point est attendu.`,
+                    line: i + 2,
+                    field,
+                })
+            }
+        }
+    }
+    return results
+}
+
+// ---------------------------------------------------------------------------
+// 24. checkNumericThousandsSeparator - Pas de séparateur de milliers (espace ou caractères multiples)
+// ---------------------------------------------------------------------------
+
+export function checkNumericThousandsSeparator(parsed: FecParsedFile): FecCheckResult[] {
+    const results: FecCheckResult[] = []
+    const numericFields = ["Debit", "Credit", "Montantdevise"]
+    // Detects patterns like "1 000" or "1,000,000"
+    const thousandsPattern = /^\s*[+-]?\d+\s+\d+/
+    const multiSepPattern = /[.,].*[.,]/
+
+    for (let i = 0; i < parsed.entries.length; i++) {
+        const entry = parsed.entries[i]!
+        for (const field of numericFields) {
+            const value = entry[field]
+            if (value && value.trim() !== "") {
+                if (thousandsPattern.test(value) || multiSepPattern.test(value)) {
+                    results.push({
+                        id: "NUMERIC_THOUSANDS_SEPARATOR",
+                        severity: "error",
+                        message: `Ligne ${i + 2} : le champ "${field}" contient "${value}" — un format numérique sans séparateur de milliers est attendu.`,
+                        line: i + 2,
+                        field,
+                    })
+                }
+            }
+        }
+    }
+    return results
+}
+
+// ---------------------------------------------------------------------------
+// 25. checkDateYearRange - Les dates doivent avoir une année entre 1900 et 2099
+// ---------------------------------------------------------------------------
+
+export function checkDateYearRange(parsed: FecParsedFile): FecCheckResult[] {
+    const results: FecCheckResult[] = []
+    const dateFields = ["EcritureDate", "PieceDate", "ValidDate", "DateLet"]
+
+    for (let i = 0; i < parsed.entries.length; i++) {
+        const entry = parsed.entries[i]!
+        for (const field of dateFields) {
+            const value = entry[field]
+            if (value && /^\d{8}$/.test(value)) {
+                const year = parseInt(value.substring(0, 4), 10)
+                if (year < 1900 || year > 2099) {
+                    results.push({
+                        id: "DATE_YEAR_RANGE",
+                        severity: "warning",
+                        message: `Ligne ${i + 2} : le champ "${field}" contient une date (${value}) en dehors de la période 1900–2099.`,
+                        line: i + 2,
+                        field,
+                    })
+                }
+            }
+        }
+    }
+    return results
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 

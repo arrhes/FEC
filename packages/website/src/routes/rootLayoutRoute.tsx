@@ -4,10 +4,10 @@ import { RootLayout } from "../features/rootLayout.js"
 
 const DEFAULT_DESCRIPTION =
     "Validez votre Fichier des Écritures Comptables (FEC) selon l'article A47 A-1 du Livre des procédures fiscales. Gratuit, open source, 100\u00a0% local."
-const SITE_NAME = "Arrhes - FEC"
+const SITE_NAME = "FEC - Arrhes"
 const BASE_URL = "https://fec.arrhes.com"
 const OG_IMAGE_URL = `${BASE_URL}/og.png`
-const OG_IMAGE_ALT = "Arrhes - FEC - Outil de validation de Fichier des Écritures Comptables"
+const OG_IMAGE_ALT = "FEC - Arrhes - Outil de validation de Fichier des Écritures Comptables"
 
 export const rootLayoutRoute = createRootRouteWithContext<{
     title: string | undefined

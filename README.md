@@ -11,7 +11,7 @@ L'ensemble du traitement est effectué **localement dans le navigateur** : aucun
 ## Fonctionnalités
 
 - Validation de fichiers FEC au format texte tabulé (`.txt`) et XML (`.xml`)
-- 19 contrôles de conformité : structure, colonnes, formats, cohérence comptable
+- 25 contrôles de conformité : structure, colonnes, formats, cohérence comptable
 - Distinction erreurs / avertissements avec localisation (ligne, champ)
 - Traitement 100% local, gratuit et sans inscription
 
@@ -38,6 +38,12 @@ L'ensemble du traitement est effectué **localement dans le navigateur** : aucun
 | 17 | Écritures d'ouverture (à-nouveaux) | Avertissement |
 | 18 | Équilibre débit/crédit par écriture | Avertissement |
 | 19 | Cohérence PieceDate / EcritureDate | Avertissement |
+| 20 | Lignes vides dans les données | Erreur |
+| 21 | Nombre de champs par ligne cohérent avec l'en-tête | Erreur |
+| 22 | Point interdit comme séparateur décimal | Erreur |
+| 23 | Séparateurs de milliers interdits | Erreur |
+| 24 | Année des dates entre 1900 et 2099 | Avertissement |
+| 25 | Débit et Crédit mutuellement exclusifs | Avertissement |
 
 ## Architecture
 
@@ -149,6 +155,12 @@ Variables d'environnement requises (voir `workflows/build/.env.example`) :
 | Gestionnaire de paquets | pnpm |
 | CI/CD | GitHub Actions |
 | Production | Docker, Nginx |
+
+## Références
+
+- [Test-Compta-Demat (DGFiP)](https://github.com/DGFiP/Test-Compta-Demat) — outil de référence de l'administration fiscale pour la validation des FEC
+- [Article A47 A-1 du LPF](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/) — base légale définissant le format FEC
+- [Fichiers standards des écritures comptables (impots.gouv.fr)](https://www.impots.gouv.fr/fichiers-standards-des-ecritures-comptables) — documentation officielle et schémas XSD
 
 ## Licence
 

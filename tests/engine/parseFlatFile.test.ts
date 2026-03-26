@@ -147,4 +147,80 @@ describe("parseFlatFile", () => {
             expect(result.entries[0]!["A"]).toBe("1")
         })
     })
+
+    // -----------------------------------------------------------------------
+    // Line issue tracking (Alto2 #12 empty lines, #13 field count mismatch)
+    // -----------------------------------------------------------------------
+    describe("line issue tracking", () => {
+        it("should have lineIssues array for valid files", () => {
+            for (const fileName of FLAT_SAMPLES) {
+                const content = readSample(fileName)
+                const result = parseFlatFile(content, fileName)
+
+                expect(result.lineIssues).toBeInstanceOf(Array)
+            }
+        })
+
+        it("should track empty lines within file data", () => {
+            const content = "A\tB\tC\tD\tE\n1\t2\t3\t4\t5\n\n6\t7\t8\t9\t10"
+            const result = parseFlatFile(content, "emptyline.txt")
+
+            expect(result.entries.length).toBe(2) // empty line skipped for entries
+            expect(result.lineIssues!.length).toBe(1)
+            expect(result.lineIssues![0]!.kind).toBe("empty")
+            expect(result.lineIssues![0]!.line).toBe(3) // 1-based line number
+        })
+
+        it("should track field count mismatch when line has fewer fields", () => {
+            const content = "A\tB\tC\tD\tE\n1\t2\t3"
+            const result = parseFlatFile(content, "fewerfields.txt")
+
+            expect(result.entries.length).toBe(1) // still parsed
+            expect(result.lineIssues!.length).toBe(1)
+            expect(result.lineIssues![0]!.kind).toBe("field_count_mismatch")
+            expect(result.lineIssues![0]!.expectedFields).toBe(5)
+            expect(result.lineIssues![0]!.actualFields).toBe(3)
+        })
+
+        it("should track field count mismatch when line has more fields", () => {
+            const content = "A\tB\tC\tD\tE\n1\t2\t3\t4\t5\t6\t7"
+            const result = parseFlatFile(content, "morefields.txt")
+
+            expect(result.lineIssues!.length).toBe(1)
+            expect(result.lineIssues![0]!.kind).toBe("field_count_mismatch")
+            expect(result.lineIssues![0]!.expectedFields).toBe(5)
+            expect(result.lineIssues![0]!.actualFields).toBe(7)
+        })
+
+        it("should track both empty lines and field count mismatches", () => {
+            const content = "A\tB\tC\n1\t2\t3\n\n4\t5"
+            const result = parseFlatFile(content, "mixed.txt")
+
+            expect(result.lineIssues!.length).toBe(2)
+            const kinds = result.lineIssues!.map((i) => i.kind)
+            expect(kinds).toContain("empty")
+            expect(kinds).toContain("field_count_mismatch")
+        })
+
+        it("should have no line issues for well-formed files", () => {
+            const content = "A\tB\tC\tD\tE\n1\t2\t3\t4\t5\n6\t7\t8\t9\t10"
+            const result = parseFlatFile(content, "wellformed.txt")
+
+            expect(result.lineIssues).toEqual([])
+        })
+
+        it("should have lineIssues for empty file", () => {
+            const result = parseFlatFile("", "empty.txt")
+            expect(result.lineIssues).toEqual([])
+        })
+
+        it("sample files should have no field count mismatches", () => {
+            for (const fileName of FLAT_SAMPLES) {
+                const content = readSample(fileName)
+                const result = parseFlatFile(content, fileName)
+                const mismatches = result.lineIssues!.filter((i) => i.kind === "field_count_mismatch")
+                expect(mismatches).toEqual([])
+            }
+        })
+    })
 })

@@ -1,4 +1,6 @@
 import type { ComponentProps } from "react";
+import { css } from "../../../styled-system/css/css";
+import { cx } from "../../../styled-system/css/cx";
 import { token } from "../../../styled-system/tokens/index";
 
 export function Logo(props: { size?: number; className?: ComponentProps<"svg">["className"] }) {
@@ -11,7 +13,12 @@ export function Logo(props: { size?: number; className?: ComponentProps<"svg">["
             fill="none"
             color={token("colors.primary")}
             strokeLinecap="round"
-            className={props.className}
+            className={cx(
+                css({
+                    padding: "0.125rem",
+                }),
+                props.className
+            )}
         >
             <g opacity=".2" fill="currentColor" stroke="none">
                 <rect x="0" y="0" width="11" height="6" rx="2" />
