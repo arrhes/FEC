@@ -9,5 +9,5 @@ dev-up:
 dev-down:
     ./scripts/dev-down.sh
 
-build:
-    ./scripts/build.sh
+build *args:
+    ./scripts/build.sh {{args}}

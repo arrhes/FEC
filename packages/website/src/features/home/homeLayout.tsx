@@ -1,4 +1,4 @@
-import { IconBrandGithub } from "@tabler/icons-react"
+import { IconBrandGithub, IconClipboardList } from "@tabler/icons-react"
 import { Outlet } from "@tanstack/react-router"
 import { css } from "../../../styled-system/css/css"
 import { ButtonGhostContent } from "../../components/buttons/buttonGhostContent.tsx"
@@ -55,6 +55,7 @@ export function HomeLayout() {
                         <a href="https://arrhes.com" target="_blank" rel="noopener noreferrer">
                             <ButtonGhostContent
                                 leftIcon={<Logo />}
+                                text="Arrhes"
                             />
                         </a>
 
@@ -65,7 +66,9 @@ export function HomeLayout() {
                         <LinkButton
                             to="/"
                         >
-                            <ButtonGhostContent text="Fichier des Écritures Comptables" />
+                            <ButtonGhostContent
+                                leftIcon={<IconClipboardList />}
+                                text="Fichier des Écritures Comptables" />
                         </LinkButton>
                     </div>
 

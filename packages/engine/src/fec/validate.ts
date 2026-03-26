@@ -21,6 +21,12 @@ import {
     checkEmptyFile,
     checkDateValidity,
     checkPieceDateCoherence,
+    checkFieldCountMismatch,
+    checkEmptyLines,
+    checkDebitCreditExclusive,
+    checkNumericDotSeparator,
+    checkNumericThousandsSeparator,
+    checkDateYearRange,
 } from "./checks.js"
 
 function detectFileType(fileName: string, content: string): "flat" | "xml" {
@@ -35,10 +41,7 @@ function detectFileType(fileName: string, content: string): "flat" | "xml" {
     return "flat"
 }
 
-export function validateFecFile(
-    content: string,
-    fileName: string,
-): FecValidationResult {
+export function validateFecFile(content: string, fileName: string): FecValidationResult {
     const fileType = detectFileType(fileName, content)
 
     // Parse
@@ -57,14 +60,20 @@ export function validateFecFile(
         ...checkColumnCount(parsed),
         ...checkColumnOrder(parsed),
         ...checkSeparator(parsed),
+        ...checkFieldCountMismatch(parsed),
+        ...checkEmptyLines(parsed),
         ...checkDebitCredit(parsed),
         ...checkDateFormat(parsed),
         ...checkNumericFormat(parsed),
+        ...checkNumericDotSeparator(parsed),
+        ...checkNumericThousandsSeparator(parsed),
         ...checkCompteNum(parsed),
         ...checkMandatoryFields(parsed),
         ...checkSensValues(parsed),
         ...checkDateValidity(parsed),
+        ...checkDateYearRange(parsed),
         ...checkPieceDateCoherence(parsed),
+        ...checkDebitCreditExclusive(parsed),
         ...checkChronologicalOrder(parsed),
         ...checkEcritureNumSequence(parsed),
         ...checkOpeningEntries(parsed),

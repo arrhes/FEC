@@ -6,6 +6,7 @@ export type {
     FecColumnDefinition,
     FecEntry,
     FecParsedFile,
+    FecParsedLineIssue,
 } from "./types.js"
 
 export { BIC_COLUMNS, BIC_COLUMN_NAMES } from "./types.js"
@@ -34,4 +35,10 @@ export {
     checkEmptyFile,
     checkDateValidity,
     checkPieceDateCoherence,
+    checkFieldCountMismatch,
+    checkEmptyLines,
+    checkDebitCreditExclusive,
+    checkNumericDotSeparator,
+    checkNumericThousandsSeparator,
+    checkDateYearRange,
 } from "./checks.js"

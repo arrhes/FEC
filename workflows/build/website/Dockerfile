@@ -23,6 +23,8 @@ FROM base AS build
 WORKDIR /root
 COPY . .
 RUN CI=true pnpm install --no-frozen-lockfile
+ARG CACHEBUST
+RUN pnpm --filter='@arrhes/fec-engine' run test
 RUN pnpm run build
 
 # Deploy stage - serve static files with Nginx
